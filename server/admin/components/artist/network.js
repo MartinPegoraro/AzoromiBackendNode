@@ -4,16 +4,11 @@ const router = express.Router()
 const response = require('../../../network/response')
 const auth = require('../../../auth')
 
-router.post("/", auth.check.registered, function (req, res) {
+router.post("/", function (req, res) {
     controller.createOne(req.body)
         .then((data) => {
+            console.log(data.email);
             response.success(req, res, data, 'Usuario creado', 200)
-            // res.status(200).json({
-            //     error: false,
-            //     body: data,
-            //     status: 200,
-            //     message: 'producto creado con exito'
-            // })
         })
         .catch((err) => {
             response.error(req, res, err)
@@ -56,7 +51,7 @@ router.get("/:gender", function (req, res) {
         })
 })
 
-router.patch('/:id', function (req, res) {
+router.patch('/:id', auth.check.registered, function (req, res) {
     controller.update(req.params.id, req.body)
         .then((data) => {
             res.status(200).json({

@@ -6,8 +6,7 @@ const returnData = data => {
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
-        password: data.password,
-        dni: data.dni,
+        appRole: data.appRole,
         gender: data.gender,
         nickName: data.nickName,
         _id: data._id,
@@ -22,17 +21,21 @@ async function login({ email, password }) {
         message: "email o contraseña incorrecta"
     }
 
+
     const foundUserArtist = await ArtistiModel.findOne({ email: email })
-    // const foundUserCanva = await CanvaModel.findOne({ email: email })
+    const foundUserCanva = await CanvaModel.findOne({ email: email })
 
-    const isValidPasswordArtist = await foundUserArtist.validPassword(password)
-    // const isValidPasswordCanva = await foundUserCanva.validPassword(password)
 
-    if (!isValidPasswordArtist) return Promise.reject(errorResponse)
+    const isValidPasswordArtist = await foundUserArtist?.validPassword(password)
+    const isValidPasswordCanva = await foundUserCanva?.validPassword(password)
 
-    console.log(isValidPasswordArtist);
+    if (!isValidPasswordArtist && !isValidPasswordCanva) return Promise.reject(errorResponse)
+    // if (!isValidPasswordCanva) return Promise.reject(errorResponse)
 
-    const res = returnData(foundUserArtist);
+
+    console.log(foundUserArtist);
+
+    const res = foundUserArtist ? returnData(foundUserArtist) : returnData(foundUserCanva);
     // console.log(res);
 
     const token = auth.sign(res);

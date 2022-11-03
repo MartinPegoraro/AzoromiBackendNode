@@ -16,11 +16,13 @@ const check = {
     registered: async (req, res, next) => {
         try {
             const decoded = await decodeHeader(req);
+            console.log(decoded, "decoded");
             const errorResponse = {
                 status: 401,
                 message: 'Necesitas estas registrado'
             }
             const userId = decoded._id
+            console.log(userId, "userId");
             next()
         } catch (error) {
             response.error(req, res, error)
@@ -46,6 +48,7 @@ async function decodeHeader(req) {
         const decoded = verify(token)
         req.user = decoded
 
+        console.log(req.user, '1234523');
         return Promise.resolve(decoded)
     } catch (error) {
         return Promise.reject({ status: 401, message: 'Token vencido' })

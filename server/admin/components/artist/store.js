@@ -2,11 +2,16 @@ const { ArtistiModel } = require('../../../models')
 
 const returnData = data => {
     return {
-        name: data.name,
-        price: data.price,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        appRole: data.appRole,
         gender: data.gender,
-        description: data.description,
-        isDeleted: data.isDeleted
+        nickName: data.nickName,
+        _id: data._id,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
     }
 }
 

@@ -20,6 +20,9 @@ const MySchema = Schema(
             type: String,
             // required: true
         },
+        appRole: {
+            type: String,
+        },
         nickName: {
             type: String
         },
@@ -44,7 +47,8 @@ const MySchema = Schema(
 MySchema.plugin(uniqueValidator)
 
 MySchema.methods.setPassword = async function (password) {
-    const passwordHash = await brcrypt.hash(password, 7);
+    const saltRounds = 10;
+    const passwordHash = await brcrypt.hash(password, saltRounds);
     this.password = passwordHash
     await this.save()
 }
