@@ -43,6 +43,7 @@ async function decodeHeader(req) {
     try {
         const authorization = req.headers.authorization || ''
         const token = getToken(authorization)
+        const decoded = verify(token)
         req.user = decoded
 
         return Promise.resolve(decoded)

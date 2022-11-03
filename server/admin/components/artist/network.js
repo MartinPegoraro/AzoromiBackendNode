@@ -4,7 +4,7 @@ const router = express.Router()
 const response = require('../../../network/response')
 const auth = require('../../../auth')
 
-router.post("/", function (req, res) {
+router.post("/", auth.check.registered, function (req, res) {
     controller.createOne(req.body)
         .then((data) => {
             response.success(req, res, data, 'Usuario creado', 200)
