@@ -4,6 +4,17 @@ async function createOne(data) {
     return store.add(data)
 }
 
+async function confirm(data) {
+    return store.confirm(data)
+}
+
+async function sendCodRecoverPass(data) {
+    return store.codRecoverPass(data)
+}
+async function checkCod(data) {
+    return store.compareCod(data)
+}
+
 async function getAll() {
     return store.getAll()
 }
@@ -30,5 +41,8 @@ module.exports = {
     getOne,
     getOneGender,
     update,
-    deleteOne
+    deleteOne,
+    confirm,
+    sendCodRecoverPass,
+    checkCod
 }

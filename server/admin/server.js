@@ -5,11 +5,13 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const router = require('./network/routes')
 const cors = require('cors');
+const { Server } = require('socket.io')
 
 require('dotenv').config()
 
 var url = `${process.env.MONGO_URI}`
 mongoose.Promise = global.Promise
+
 
 // const db = require('../db')
 

@@ -5,15 +5,65 @@ const response = require('../../../network/response')
 const auth = require('../../../auth')
 
 router.post("/", function (req, res) {
+    console.log(req.body, "req.body");
     controller.createOne(req.body)
         .then((data) => {
-            console.log(data.email);
+            // console.log(data);
             response.success(req, res, data, 'Usuario creado', 200)
         })
         .catch((err) => {
             response.error(req, res, err)
         })
 })
+
+router.post("/send-codEmail", function (req, res) {
+    console.log(req.body, "req.body");
+    controller
+        .confirm(req.body)
+        .then((data) => {
+            response.success(req, res, data, "¡Email confirmado!", 200)
+        })
+        .catch((err) => {
+            response.error(req, res, err)
+        });
+});
+
+router.post("/send-codRecoverPass", function (req, res) {
+    console.log(req.body, "req.body");
+    controller
+        .sendCodRecoverPass(req.body)
+        .then((data) => {
+            response.success(req, res, data, "¡Codigo de recuperacion de password enviado!", 200)
+        })
+        .catch((err) => {
+            response.error(req, res, err)
+        });
+});
+
+router.post("/checkCod", function (req, res) {
+    // console.log(req.body, "req.body");
+    controller
+        .checkCod(req.body)
+        .then((data) => {
+            response.success(req, res, data, "¡Codigo cheakeado!", 200)
+        })
+        .catch((err) => {
+            response.error(req, res, err)
+        });
+});
+
+router.post("/recoverPass", function (req, res) {
+    console.log(req.body, "req.body");
+    controller
+        .confirm(req.body)
+        .then((data) => {
+            response.success(req, res, data, "¡password cambiada!", 200)
+        })
+        .catch((err) => {
+            response.error(req, res, err)
+        });
+});
+
 
 router.get("/", function (req, res) {
     controller.getAll()
