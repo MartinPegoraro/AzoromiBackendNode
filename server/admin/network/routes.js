@@ -3,6 +3,8 @@ const seller = require('../components/seller/network')
 const artist = require('../components/artist/network')
 const canva = require('../components/canva/network')
 const auth = require('../components/auth/network')
+const chat = require('../components/chat/network')
+
 
 const routes = function (server) {
     server.use('/product', product),
@@ -10,6 +12,8 @@ const routes = function (server) {
         server.use('/artist', artist),
         server.use('/canva', canva)
     server.use('/auth', auth)
+    server.use('/chat', chat)
+
 
 }
 module.exports = routes

@@ -1,7 +1,6 @@
-const { ArtistiModel } = require('../../../models')
+const { ArtistiModel, CanvaModel } = require('../../../models')
 const randomstring = require('randomstring');
 const nodemailer = require('nodemailer');
-const { findByIdAndUpdate } = require('../../../models/product');
 
 const returnData = data => {
     return {
@@ -19,48 +18,49 @@ const returnData = data => {
 }
 
 async function add(data) {
-
+    const errorResponse = {
+        status: 401,
+        message: "Este correo ya existe"
+    }
     const foundArtist = await ArtistiModel.findOne({ email: data.email })
-    console.log(foundArtist);
-    if (foundArtist) {
+    const foundCanva = await CanvaModel.findOne({ email: data.email })
+
+    if (foundArtist || foundCanva) {
         console.log(' con correo igual');
 
-        return Promise.reject({
-            message: 'El correo ya existe'
-        })
+        return Promise.reject(errorResponse)
     }
 
     const cod = randomstring.generate(8)
-    // const verificationLink = `http://localhost:5000/artist/send-codEmail/` + cod
 
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASS
-        },
-        tls: {
-            rejectUnauthorized: false
-        },
-    });
+    // const transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL,
+    //         pass: process.env.PASS
+    //     },
+    //     tls: {
+    //         rejectUnauthorized: false
+    //     },
+    // });
 
-    await transporter.sendMail({
-        from: '"Azor Ahai " <azorahai080994@gmail.com>',
-        to: data.email,
-        subject: "Prueba de envio de correo con codigo de verificacion ✔",
-        html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
-                <h2>Su codigo de verificacion es: </h2>
-                <h3>${cod}</h3>`
-    }, (err, info) => {
-        if (err) {
-            console.log(err, 'error en enviar el msj');
-        } else {
-            console.log(info, 'msj enviado');
-        }
-    });
-    console.log(data, "data");
+    // await transporter.sendMail({
+    //     from: '"Azor Ahai " <azorahai080994@gmail.com>',
+    //     to: data.email,
+    //     subject: "Prueba de envio de correo con codigo de verificacion ✔",
+    //     html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
+    //             <h2>Su codigo de verificacion es: </h2>
+    //             <h3>${cod}</h3>`
+    // }, (err, info) => {
+    //     if (err) {
+    //         console.log(err, 'error en enviar el msj');
+    //     } else {
+    //         console.log('msj enviado');
+    //     }
+    // });
+    // console.log(data, "data");
 
 
     const createProduct = await ArtistiModel.create({ ...data, codEmail: cod })
@@ -82,41 +82,55 @@ async function confirm(data) {
 }
 
 async function codRecoverPass(data) {
+
+    const errorResponse = {
+        status: 401,
+        message: "El correo no existe",
+    }
+
     const cod = randomstring.generate(8)
 
-    console.log(data, "data");
+    console.log(data, "desde codRecoverPass");
+
+    const findEmail = await ArtistiModel.findOne({ email: data.email })
+
+    if (!findEmail) return Promise.reject(errorResponse)
 
 
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASS
-        },
-        tls: {
-            rejectUnauthorized: false
-        },
-    });
+    // const transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL,
+    //         pass: process.env.PASS
+    //     },
+    //     tls: {
+    //         rejectUnauthorized: false
+    //     },
+    // });
 
-    await transporter.sendMail({
-        from: '"Azor Ahai " <azorahai080994@gmail.com>',
-        to: data.email,
-        subject: "Prueba envio de recuperacion de contrasena ✔",
-        html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
-                <h2>Su codigo para poder cambiar la contrasena es: </h2>
-                <h3>${cod}</h3>`
-    }, (err, info) => {
-        if (err) {
-            console.log(err, 'error en enviar el msj');
-        } else {
-            console.log(info, 'msj enviado');
-        }
-    });
+    // await transporter.sendMail({
+    //     from: '"Azor Ahai " <azorahai080994@gmail.com>',
+    //     to: data.email,
+    //     subject: "Prueba envio de recuperacion de contrasena ✔",
+    //     html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
+    //             <h2>Su codigo para poder cambiar la contrasena es: </h2>
+    //             <h3>${cod}</h3>`
+    // }, (err, info) => {
+    //     if (err) {
+    //         // console.log(err, 'error en enviar el msj');
+    //     } else {
+    //         // console.log(info, 'msj enviado');
+    //     }
+    // });
 
-    const updateCodRecoverPass = await ArtistiModel.findOneAndUpdate({ email: data.email }, { forgetPassConfirm: true, codPassRecover: cod })
-    return returnData(updateCodRecoverPass)
+    const updateCodRecoverPass = await ArtistiModel.findOneAndUpdate({ email: data.email }, { codPassRecover: cod }, {
+        new: true,
+        context: 'query',
+    })
+    // console.log(updateCodRecoverPass, 'updateCodRecoverPass desde recoverpass');
+    return updateCodRecoverPass
 }
 
 async function compareCod(data) {
@@ -125,13 +139,30 @@ async function compareCod(data) {
         message: "El correo no coincide con el codigo enviado"
     }
 
-    const foundUser = await ArtistiModel.findOne({ email: data.email, codPassRecover: data.codPassRecover, forgetPassConfirm: true })
+    const foundUser = await ArtistiModel.findOne({ email: data.email, codPassRecover: data.codPassRecover })
 
     if (!foundUser) return Promise.reject(errorResponse)
 
     // const updatePassword = await ArtistiModel.findByIdAndUpdate({ email: data.email }, { password: data.password })
-    const updatePassword = await ArtistiModel.findOneAndUpdate({ _id: foundUser._id }, { password: data.password })
+    const updatePassword = await ArtistiModel.findOneAndUpdate({ _id: foundUser._id }, { forgetPassConfirm: true })
+    return returnData(updatePassword)
+    // await updatePassword.setPassword(data.password)
+    // console.log(updatePassword);
+    // return returnData(updatePassword)
+}
 
+async function passChange(data) {
+    console.log(data);
+    const errorResponse = {
+        status: 401,
+        message: 'Las contrasenas no coiciden'
+    }
+
+    if (data.password !== data.repitPassword) return Promise.reject(errorResponse)
+
+    const foundUser = await ArtistiModel.findOne({ email: data.email })
+
+    const updatePassword = await ArtistiModel.findOneAndUpdate({ _id: foundUser._id }, { password: data.password })
     await updatePassword.setPassword(data.password)
     console.log(updatePassword);
     return returnData(updatePassword)
@@ -179,5 +210,6 @@ module.exports = {
     remove,
     confirm,
     codRecoverPass,
-    compareCod
+    compareCod,
+    passChange
 }

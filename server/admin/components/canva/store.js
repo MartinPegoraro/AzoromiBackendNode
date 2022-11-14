@@ -1,4 +1,6 @@
-const { ArtistiModel } = require('../../../models')
+const { CanvaModel, ArtistiModel } = require('../../../models')
+const randomstring = require('randomstring');
+const nodemailer = require('nodemailer');
 
 const returnData = data => {
     return {
@@ -11,9 +13,54 @@ const returnData = data => {
 }
 
 async function add(data) {
-    const createProduct = await ArtistiModel.create(data)
-    await createProduct.setPassword(data.password)
-    return returnData(createProduct)
+    const errorResponse = {
+        status: 401,
+        message: "Este correo ya existe"
+    }
+
+    const foundArtist = await ArtistiModel.findOne({ email: data.email })
+    const foundCanva = await CanvaModel.findOne({ email: data.email })
+
+    if (foundArtist || foundCanva) {
+        console.log(' con correo igual');
+        return Promise.reject(errorResponse)
+    }
+
+    const cod = randomstring.generate(8)
+
+    // const transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL,
+    //         pass: process.env.PASS
+    //     },
+    //     tls: {
+    //         rejectUnauthorized: false
+    //     },
+    // });
+
+    // await transporter.sendMail({
+    //     from: '"Azor Ahai " <azorahai080994@gmail.com>',
+    //     to: data.email,
+    //     subject: "Prueba de envio de correo con codigo de verificacion ✔",
+    //     html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
+    //             <h2>Su codigo de verificacion es: </h2>
+    //             <h3>${cod}</h3>`
+    // }, (err, info) => {
+    //     if (err) {
+    //         console.log(err, 'error en enviar el msj');
+    //     } else {
+    //         console.log('msj enviado');
+    //     }
+    // });
+    // console.log(data, "data");
+
+
+    const createCanva = await CanvaModel.create({ ...data, codEmail: cod })
+    await createCanva.setPassword(data.password)
+    return returnData(createCanva)
 }
 
 async function getAll() {

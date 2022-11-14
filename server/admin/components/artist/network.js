@@ -8,8 +8,12 @@ router.post("/", function (req, res) {
     console.log(req.body, "req.body");
     controller.createOne(req.body)
         .then((data) => {
-            // console.log(data);
-            response.success(req, res, data, 'Usuario creado', 200)
+            console.log(data, 'createOne network');
+            // res.status(200).json({
+            //     message: 'usuario creado'
+            // })
+            response.success(req, res, data, 'Usuario creado', 201)
+            return data
         })
         .catch((err) => {
             response.error(req, res, err)
@@ -34,6 +38,7 @@ router.post("/send-codRecoverPass", function (req, res) {
         .sendCodRecoverPass(req.body)
         .then((data) => {
             response.success(req, res, data, "¡Codigo de recuperacion de password enviado!", 200)
+            return data
         })
         .catch((err) => {
             response.error(req, res, err)
@@ -53,9 +58,9 @@ router.post("/checkCod", function (req, res) {
 });
 
 router.post("/recoverPass", function (req, res) {
-    console.log(req.body, "req.body");
+    // console.log(req.body, "req.body");
     controller
-        .confirm(req.body)
+        .changePassword(req.body)
         .then((data) => {
             response.success(req, res, data, "¡password cambiada!", 200)
         })

@@ -1,16 +1,18 @@
 const express = require('express')
 const controller = require('./controller')
+const response = require('../../../network/response')
+
 const router = express.Router()
 
 router.post("/", function (req, res) {
+    console.log('creando un lienzo');
     controller.createOne(req.body)
         .then((data) => {
-            res.status(200).json({
-                error: false,
-                body: data,
-                status: 200,
-                message: 'producto creado con exito'
-            })
+            response.success(req, res, data, 'Usuario creado', 201)
+            return data
+        })
+        .catch((err) => {
+            response.error(req, res, err)
         })
 })
 

@@ -11,8 +11,13 @@ async function confirm(data) {
 async function sendCodRecoverPass(data) {
     return store.codRecoverPass(data)
 }
+
 async function checkCod(data) {
     return store.compareCod(data)
+}
+
+async function changePassword(data) {
+    return store.passChange(data)
 }
 
 async function getAll() {
@@ -44,5 +49,6 @@ module.exports = {
     deleteOne,
     confirm,
     sendCodRecoverPass,
-    checkCod
+    checkCod,
+    changePassword
 }
