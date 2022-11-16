@@ -34,7 +34,7 @@ const MySchema = Schema(
             type: String,
         }],
         imagesWork: [{
-            type: String,
+            type: String
         }],
         imagesProfile: {
             type: Array,
@@ -62,6 +62,13 @@ const MySchema = Schema(
             type: Boolean,
             default: false
         },
+        chats: [
+            {
+                type: ObjectId,
+                ref: 'Chat',
+            }
+        ]
+        ,
         isDeleted: {
             type: Boolean,
             default: false

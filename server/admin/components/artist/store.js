@@ -33,34 +33,34 @@ async function add(data) {
 
     const cod = randomstring.generate(8)
 
-    // const transporter = nodemailer.createTransport({
-    //     host: "smtp.gmail.com",
-    //     port: 465,
-    //     secure: true,
-    //     auth: {
-    //         user: process.env.EMAIL,
-    //         pass: process.env.PASS
-    //     },
-    //     tls: {
-    //         rejectUnauthorized: false
-    //     },
-    // });
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASS
+        },
+        tls: {
+            rejectUnauthorized: false
+        },
+    });
 
-    // await transporter.sendMail({
-    //     from: '"Azor Ahai " <azorahai080994@gmail.com>',
-    //     to: data.email,
-    //     subject: "Prueba de envio de correo con codigo de verificacion ✔",
-    //     html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
-    //             <h2>Su codigo de verificacion es: </h2>
-    //             <h3>${cod}</h3>`
-    // }, (err, info) => {
-    //     if (err) {
-    //         console.log(err, 'error en enviar el msj');
-    //     } else {
-    //         console.log('msj enviado');
-    //     }
-    // });
-    // console.log(data, "data");
+    await transporter.sendMail({
+        from: '"Azor Ahai " <azorahai080994@gmail.com>',
+        to: data.email,
+        subject: "Prueba de envio de correo con codigo de verificacion ✔",
+        html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
+                <h2>Su codigo de verificacion es: </h2>
+                <h3>${cod}</h3>`
+    }, (err, info) => {
+        if (err) {
+            console.log(err, 'error en enviar el msj');
+        } else {
+            console.log('msj enviado');
+        }
+    });
+    console.log(data, "data");
 
 
     const createProduct = await ArtistiModel.create({ ...data, codEmail: cod })

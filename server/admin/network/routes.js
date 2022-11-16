@@ -4,6 +4,7 @@ const artist = require('../components/artist/network')
 const canva = require('../components/canva/network')
 const auth = require('../components/auth/network')
 const chat = require('../components/chat/network')
+const image = require("../components/image/network")
 
 
 const routes = function (server) {
@@ -13,7 +14,6 @@ const routes = function (server) {
         server.use('/canva', canva)
     server.use('/auth', auth)
     server.use('/chat', chat)
-
-
+    server.use("/upload", image)
 }
 module.exports = routes

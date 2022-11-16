@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const message = require("./message")
 const { Schema } = mongoose
 const { ObjectId } = Schema.Types
 
@@ -12,7 +13,11 @@ const MySchema = Schema(
         idArtist: {
             type: ObjectId,
             ref: 'Artist',
-        }
+        },
+        messages: [{
+            type: ObjectId,
+            ref: 'Message',
+        }]
     }, { timestamps: true }
 )
 

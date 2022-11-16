@@ -12,6 +12,9 @@ const MySchema = Schema(
         message: {
             type: String
         },
+        idUserMsg: {
+            type: String
+        },
         idArtist: {
             type: ObjectId,
             ref: 'Artist',

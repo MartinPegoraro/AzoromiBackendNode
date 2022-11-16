@@ -20,6 +20,9 @@ const MySchema = Schema(
             type: String,
             // required: true
         },
+        appRole: {
+            type: String,
+        },
         nickName: {
             type: String
         },
@@ -34,6 +37,26 @@ const MySchema = Schema(
             type: Array,
             // default: 'https://logiabarcelona.com/wp-content/uploads/2018/12/tatuaje_realismo_brujula_brazo_Logia_Barcelona_Eduar_Cardona.jpg'
         },
+        codEmail: {
+            type: String
+        },
+        codPassRecover: {
+            type: String
+        },
+        forgetPassConfirm: {
+            type: Boolean,
+            default: false
+        },
+        emailConfirm: {
+            type: Boolean,
+            default: false
+        },
+        chats: [
+            {
+                type: ObjectId,
+                ref: 'Chat',
+            }
+        ],
         isDeleted: {
             type: Boolean,
             default: false
