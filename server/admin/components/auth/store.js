@@ -23,10 +23,8 @@ async function login({ email, password }) {
         message: "email o contraseña incorrecta"
     }
 
-
-    const foundUserArtist = await ArtistiModel.findOne({ email: email })
-    const foundUserCanva = await CanvaModel.findOne({ email: email })
-
+    const foundUserArtist = await ArtistiModel.findOne({ email: email, emailConfirm: true })
+    const foundUserCanva = await CanvaModel.findOne({ email: email, emailConfirm: true })
 
     const isValidPasswordArtist = await foundUserArtist?.validPassword(password)
     const isValidPasswordCanva = await foundUserCanva?.validPassword(password)
@@ -69,33 +67,33 @@ async function codRecoverPass(data) {
     if (!findEmailArtist && !findEmailCanva) return Promise.reject(errorResponse)
 
 
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASS
-        },
-        tls: {
-            rejectUnauthorized: false
-        },
-    });
+    // const transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL,
+    //         pass: process.env.PASS
+    //     },
+    //     tls: {
+    //         rejectUnauthorized: false
+    //     },
+    // });
 
-    await transporter.sendMail({
-        from: '"Azor Ahai " <azorahai080994@gmail.com>',
-        to: data.email,
-        subject: "Prueba envio de recuperacion de contrasena ✔",
-        html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
-                <h2>Su codigo para poder cambiar la contrasena es: </h2>
-                <h3>${cod}</h3>`
-    }, (err, info) => {
-        if (err) {
-            // console.log(err, 'error en enviar el msj');
-        } else {
-            // console.log(info, 'msj enviado');
-        }
-    });
+    // await transporter.sendMail({
+    //     from: '"Azor Ahai " <azorahai080994@gmail.com>',
+    //     to: data.email,
+    //     subject: "Prueba envio de recuperacion de contrasena ✔",
+    //     html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
+    //             <h2>Su codigo para poder cambiar la contrasena es: </h2>
+    //             <h3>${cod}</h3>`
+    // }, (err, info) => {
+    //     if (err) {
+    //         // console.log(err, 'error en enviar el msj');
+    //     } else {
+    //         // console.log(info, 'msj enviado');
+    //     }
+    // });
 
     if (findEmailCanva !== null) {
         console.log('entro al canva');

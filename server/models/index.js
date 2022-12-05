@@ -4,5 +4,7 @@ module.exports = {
     ArtistiModel: require('./artist'),
     CanvaModel: require('./canva'),
     MessageModel: require('./message'),
-    ChatModel: require('./chat')
+    ChatModel: require('./chat'),
+    ImageModel: require('./image'),
+    SaveImgModel: require('./savedImg')
 }

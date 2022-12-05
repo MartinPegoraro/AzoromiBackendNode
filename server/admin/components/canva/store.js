@@ -1,16 +1,36 @@
-const { CanvaModel, ArtistiModel } = require('../../../models')
+const { CanvaModel, ArtistiModel, ImageModel } = require('../../../models')
 const randomstring = require('randomstring');
 const nodemailer = require('nodemailer');
 
 const returnData = data => {
     return {
-        name: data.name,
-        price: data.price,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        appRole: data.appRole,
         gender: data.gender,
-        description: data.description,
-        isDeleted: data.isDeleted
+        genderTatoo: data.genderTatoo,
+        nickName: data.nickName,
+        _id: data._id,
+        imgSave: data.imgSave,
+        imagesWork: data.imagesWork,
+        imagesProfile: data.imagesProfile,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
     }
 }
+
+
+const populateImage = {
+    path: "imagesWork",
+    select: "imageId roleUser description",
+};
+
+const populateImageProfile = {
+    path: "imagesProfile",
+    select: "imageId roleUser description",
+};
+
 
 async function add(data) {
     const errorResponse = {
@@ -58,9 +78,22 @@ async function add(data) {
     // console.log(data, "data");
 
 
-    const createCanva = await CanvaModel.create({ ...data, codEmail: cod })
+    const createCanva = await CanvaModel.create({ ...data, codEmail: cod, imagesProfile: '123' })
     await createCanva.setPassword(data.password)
     return returnData(createCanva)
+}
+
+async function confirm(data) {
+    const foundEmail = await CanvaModel.findOne({ codEmail: data.codEmail, email: data.email })
+    if (!foundEmail) {
+        return Promise.reject({
+            message: 'No se pudo confirmar'
+        })
+    }
+
+    const confirm = await CanvaModel.findOneAndUpdate({ email: data.email }, { emailConfirm: true })
+    console.log(confirm, 'confirm');
+    return returnData(confirm)
 }
 
 async function getAll() {
@@ -69,19 +102,24 @@ async function getAll() {
 }
 
 async function getOne(id) {
-    const getOne = await ArtistiModel.findOne({ _id: id, isDeleted: false })
-    console.log(getOne);
+    // console.log(id);
+    const getOne = await CanvaModel.findOne({ _id: id, isDeleted: false })
     return returnData(getOne)
 }
 
-async function getGender(gender) {
-    const getGender = await ArtistiModel.find({ gender: gender, isDeleted: false })
-    // console.log(getGender)
-    return getGender
+async function getUser(id) {
+    const getOneCanva = await CanvaModel.findOne({ _id: id, isDeleted: false }).populate(populateImage).populate('imgSave')
+    const getOneArtist = await ArtistiModel.findOne({ _id: id, isDeleted: false }).populate(populateImage).populate('imgSave')
+    if (getOneCanva !== null) {
+        return returnData(getOneCanva)
+    } else {
+        return returnData(getOneArtist)
+    }
 }
 
+
 async function updateOne(id, data) {
-    const updateProduct = await ArtistiModel.findByIdAndUpdate({ _id: id }, data, {
+    const updateProduct = await CanvaModel.findByIdAndUpdate({ _id: id }, data, {
         new: true,
         constext: 'query',
     })
@@ -100,7 +138,9 @@ module.exports = {
     add,
     getAll,
     getOne,
-    getGender,
+
     updateOne,
-    remove
+    remove,
+    confirm,
+    getUser
 }

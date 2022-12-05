@@ -8,10 +8,6 @@ router.post("/", function (req, res) {
     console.log(req.body, "req.body");
     controller.createOne(req.body)
         .then((data) => {
-            console.log(data, 'createOne network');
-            // res.status(200).json({
-            //     message: 'usuario creado'
-            // })
             response.success(req, res, data, 'Usuario creado', 201)
             return data
         })
@@ -82,15 +78,12 @@ router.get("/", function (req, res) {
         })
 })
 
-router.get("/gender/:id", function (req, res) {
+router.get("/:id", function (req, res) {
     controller.getOne(req.params.id)
         .then((data) => {
-            res.status(200).json({
-                error: false,
-                body: data,
-                status: 200,
-                message: 'Producto'
-            })
+            response.success(req, res, data, 'Usuario encontrado', 200)
+        }).catch((err) => {
+            console.log(err);
         })
 })
 
@@ -106,15 +99,12 @@ router.get("/:gender", function (req, res) {
         })
 })
 
-router.patch('/:id', auth.check.registered, function (req, res) {
+router.patch('/:id', function (req, res) {
     controller.update(req.params.id, req.body)
         .then((data) => {
-            res.status(200).json({
-                error: false,
-                body: data,
-                status: 200,
-                message: "producto actualizado"
-            })
+            response.success(req, res, data, 'Usuario lienzo o artista encontrado', 200)
+        }).catch((err) => {
+            console.log(err);
         })
 })
 

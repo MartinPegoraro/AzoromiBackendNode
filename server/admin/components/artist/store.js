@@ -7,11 +7,13 @@ const returnData = data => {
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
-        password: data.password,
         appRole: data.appRole,
         gender: data.gender,
+        genderTatoo: data.genderTatoo,
         nickName: data.nickName,
         _id: data._id,
+        imagesWork: data.imagesWork,
+        imagesProfile: data.imagesProfile,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
     }
@@ -33,34 +35,34 @@ async function add(data) {
 
     const cod = randomstring.generate(8)
 
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASS
-        },
-        tls: {
-            rejectUnauthorized: false
-        },
-    });
+    // const transporter = nodemailer.createTransport({
+    //     host: "smtp.gmail.com",
+    //     port: 465,
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL,
+    //         pass: process.env.PASS
+    //     },
+    //     tls: {
+    //         rejectUnauthorized: false
+    //     },
+    // });
 
-    await transporter.sendMail({
-        from: '"Azor Ahai " <azorahai080994@gmail.com>',
-        to: data.email,
-        subject: "Prueba de envio de correo con codigo de verificacion ✔",
-        html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
-                <h2>Su codigo de verificacion es: </h2>
-                <h3>${cod}</h3>`
-    }, (err, info) => {
-        if (err) {
-            console.log(err, 'error en enviar el msj');
-        } else {
-            console.log('msj enviado');
-        }
-    });
-    console.log(data, "data");
+    // await transporter.sendMail({
+    //     from: '"Azor Ahai " <azorahai080994@gmail.com>',
+    //     to: data.email,
+    //     subject: "Prueba de envio de correo con codigo de verificacion ✔",
+    //     html: `<b>Empresa que dio vida a azoromi y va por todo </b> <br>
+    //             <h2>Su codigo de verificacion es: </h2>
+    //             <h3>${cod}</h3>`
+    // }, (err, info) => {
+    //     if (err) {
+    //         console.log(err, 'error en enviar el msj');
+    //     } else {
+    //         console.log('msj enviado');
+    //     }
+    // });
+    // console.log(data, "data");
 
 
     const createProduct = await ArtistiModel.create({ ...data, codEmail: cod })
@@ -174,8 +176,8 @@ async function getAll() {
 }
 
 async function getOne(id) {
+    console.log(id);
     const getOne = await ArtistiModel.findOne({ _id: id, isDeleted: false })
-    console.log(getOne);
     return returnData(getOne)
 }
 
@@ -186,6 +188,16 @@ async function getGender(gender) {
 }
 
 async function updateOne(id, data) {
+    console.log(id, data);
+    const updateProduct = await ArtistiModel.findByIdAndUpdate({ _id: id }, data, {
+        new: true,
+        constext: 'query',
+    })
+
+    return returnData(updateProduct)
+}
+
+async function uploadImg(id, data) {
     const updateProduct = await ArtistiModel.findByIdAndUpdate({ _id: id }, data, {
         new: true,
         constext: 'query',
@@ -211,5 +223,6 @@ module.exports = {
     confirm,
     codRecoverPass,
     compareCod,
-    passChange
+    passChange,
+    uploadImg
 }

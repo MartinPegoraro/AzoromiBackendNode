@@ -28,15 +28,22 @@ const MySchema = Schema(
         },
         genre: {
             type: String,
-            enum: ['Hombre', 'Mujer', 'Otro']
+            // enum: ['Hombre', 'Mujer', 'Otro']
         },
         genderTatoo: [{
             type: String,
         }],
-        imagesWork: {
-            type: Array,
-            // default: 'https://logiabarcelona.com/wp-content/uploads/2018/12/tatuaje_realismo_brujula_brazo_Logia_Barcelona_Eduar_Cardona.jpg'
+        imagesWork: [{
+            type: ObjectId,
+            ref: 'Image'
+        }],
+        imagesProfile: {
+            type: String
         },
+        imgSave: [{
+            type: ObjectId,
+            ref: 'SaveImage'
+        }],
         codEmail: {
             type: String
         },

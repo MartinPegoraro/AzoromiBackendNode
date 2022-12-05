@@ -35,6 +35,9 @@ async function getOneGender(gender) {
 async function update(id, data) {
     return store.updateOne(id, data)
 }
+async function updateImg(id, data) {
+    return store.uploadImg(id, data)
+}
 
 async function deleteOne(id) {
     return store.remove(id)
@@ -50,5 +53,6 @@ module.exports = {
     confirm,
     sendCodRecoverPass,
     checkCod,
-    changePassword
+    changePassword,
+    updateImg
 }

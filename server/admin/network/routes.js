@@ -5,6 +5,7 @@ const canva = require('../components/canva/network')
 const auth = require('../components/auth/network')
 const chat = require('../components/chat/network')
 const image = require("../components/image/network")
+const saveImg = require("../components/saveImg/network")
 
 
 const routes = function (server) {
@@ -15,5 +16,9 @@ const routes = function (server) {
     server.use('/auth', auth)
     server.use('/chat', chat)
     server.use("/upload", image)
+    server.use("/saveImage", saveImg)
+
+
+
 }
 module.exports = routes
