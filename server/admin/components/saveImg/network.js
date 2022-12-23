@@ -16,6 +16,18 @@ router.post("/createImgSave", function (req, res) {
         })
 })
 
+router.post("/getImgSave", function (req, res) {
+    console.log(req.body);
+    controller
+        .getImgSave(req.body)
+        .then((data) => {
+            response.success(req, res, data, "La imagen estaba guardada", 200)
+        })
+        .catch((err) => {
+            console.log('error');
+            // response.error(req, res, err)
+        })
+})
 router.patch("/savePublication/:id", function (req, res) {
     controller
         .saveImgPublication(req.body, req.params)

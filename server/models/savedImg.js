@@ -20,7 +20,7 @@ const MySchema = Schema(
         savedImg: {
             type: Boolean,
             default: false
-        }
+        },
 
     }
 )

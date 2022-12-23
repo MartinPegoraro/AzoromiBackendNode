@@ -4,6 +4,9 @@ async function login(data) {
     // await validation(schema.login, data);
     return store.login(data);
 }
+async function search(data) {
+    return store.sendSearch(data);
+}
 async function sendCodRecoverPass(data) {
     return store.codRecoverPass(data)
 }
@@ -20,5 +23,6 @@ module.exports = {
     login,
     sendCodRecoverPass,
     checkCod,
-    changePassword
+    changePassword,
+    search
 };

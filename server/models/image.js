@@ -19,6 +19,13 @@ const MySchema = Schema(
         },
         description: {
             type: String
+        },
+        style: [{
+            type: String
+        }],
+        isDeleted: {
+            type: Boolean,
+            default: false
         }
     }, { timestamps: true }
 )

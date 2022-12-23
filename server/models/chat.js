@@ -17,7 +17,7 @@ const MySchema = Schema(
         messages: [{
             type: ObjectId,
             ref: 'Message',
-        }]
+        }],
     }, { timestamps: true }
 )
 

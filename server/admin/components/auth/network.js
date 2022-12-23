@@ -20,6 +20,18 @@ router.get("/verify", auth.check.registered, (req, res) => {
     response.success(req, res, null, "el usuario existe", 200)
 })
 
+router.post('/sendSearch', function (req, res) {
+    controller
+        .search(req.body)
+        .then((data) => {
+            response.success(req, res, data, "Usuario logueado", 201)
+        })
+        .catch((err) => {
+            response.error(req, res, err)
+        })
+})
+
+
 router.post("/send-codRecoverPass", function (req, res) {
     console.log(req.body, "req.body");
     controller

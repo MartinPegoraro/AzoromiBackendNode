@@ -28,15 +28,12 @@ router.post("/send-codEmail", function (req, res) {
         });
 });
 
-router.get("/", function (req, res) {
+router.get("/getAllCanvaData", function (req, res) {
     controller.getAll()
         .then((data) => {
-            res.status(200).json({
-                error: false,
-                body: data,
-                status: 200,
-                message: 'Productos'
-            })
+            response.success(req, res, data, 'Usuarios encontrados', 200)
+        }).catch((err) => {
+            console.log(err);
         })
 })
 
@@ -69,15 +66,12 @@ router.patch('/:id', function (req, res) {
 })
 
 
-router.delete('/:id', function (req, res) {
+router.delete('/delete/:id', function (req, res) {
     controller.deleteOne(req.params.id)
         .then((data) => {
-            res.status(200).json({
-                error: false,
-                body: data,
-                status: 200,
-                message: "Porducto Elminiado"
-            })
+            response.success(req, res, data, 'Se elimino correctamente', 200)
+        }).catch((err) => {
+            console.log(err);
         })
 })
 

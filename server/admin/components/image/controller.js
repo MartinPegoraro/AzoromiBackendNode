@@ -1,6 +1,6 @@
 const { EnvironmentCredentials } = require("aws-sdk")
 const aws = require("aws-sdk")
-const { ImageModel, ArtistiModel, CanvaModel } = require("../../../models")
+const { ImageModel, ArtistiModel, CanvaModel, ChatModel } = require("../../../models")
 
 const s3 = new aws.S3({
     accessKeyId: process.env.AWSAccessKeyId,
@@ -96,10 +96,29 @@ async function getAllArtiist() {
     return foundImg
 }
 
+async function deleteImg(id) {
+    const deleteOne = await ImageModel.findByIdAndUpdate({ _id: id }, { isDeleted: true })
+    return deleteOne
+}
+
+async function getChatArtist(id) {
+    const foundChatsArtisti = await ChatModel.find({ idArtist: id }).populate('idCanva')
+    return foundChatsArtisti
+}
+
+async function getChatCanva(id) {
+    const getChatCanva = await ChatModel.find({ idCanva: id }).populate('idArtist')
+    return getChatCanva
+}
+
 module.exports = {
     uploadImg,
     uploadInUser,
     getAllCanva,
     getAllArtiist,
-    updateImgProfile
+    updateImgProfile,
+    deleteImg,
+    getChatArtist,
+    getChatCanva
+
 }

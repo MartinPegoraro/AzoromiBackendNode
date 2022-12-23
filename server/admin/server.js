@@ -27,7 +27,9 @@ io.on("connection", (socket) => {
     let room = null;
     let foundChat = null
     socket.on("join", async (idActualUser, idOtherUser, appRole) => {
-        // console.log(idActualUser, idOtherUser, appRole)
+        console.log("🚀 ~ file: server.js:30 ~ socket.on ~ idOtherUser", idOtherUser)
+        console.log("🚀 ~ file: server.js:30 ~ socket.on ~ idActualUser", idActualUser)
+
         if (appRole === 'artist') {
             foundChat = await ChatModel.findOne({ idCanva: idOtherUser, idArtist: idActualUser })
             if (foundChat === null) {
@@ -50,7 +52,9 @@ io.on("connection", (socket) => {
             }
         }
         // room = idChat.toString();
+
         socket.join(room);
+        console.log("🚀 ~ file: server.js:56 ~ socket.on ~ room", room)
 
         const msgModel = await MessageModel.find()
         const msgInChat = await Promise.all(foundChat.messages.map(async (x) => {
@@ -66,7 +70,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("newMessage", async (formMessage) => {
-        // console.log(formMessage);
+        console.log(formMessage);
         const addMsgChat = await ChatModel.findById({ _id: formMessage.idChat })
         const newMessage = await MessageModel.create(formMessage);
         addMsgChat.messages.push(newMessage._id)

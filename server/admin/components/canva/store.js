@@ -8,7 +8,7 @@ const returnData = data => {
         lastName: data.lastName,
         email: data.email,
         appRole: data.appRole,
-        gender: data.gender,
+        genre: data.genre,
         genderTatoo: data.genderTatoo,
         nickName: data.nickName,
         _id: data._id,
@@ -80,7 +80,7 @@ async function add(data) {
 
     const createCanva = await CanvaModel.create({ ...data, codEmail: cod, imagesProfile: '123' })
     await createCanva.setPassword(data.password)
-    return returnData(createCanva)
+    return createCanva
 }
 
 async function confirm(data) {
@@ -93,45 +93,47 @@ async function confirm(data) {
 
     const confirm = await CanvaModel.findOneAndUpdate({ email: data.email }, { emailConfirm: true })
     console.log(confirm, 'confirm');
-    return returnData(confirm)
+    return confirm
 }
 
 async function getAll() {
-    const getAll = await ArtistiModel.find({ isDeleted: false })
+    const getAll = await CanvaModel.find({ isDeleted: false }).populate('imagesWork')
     return getAll
 }
 
 async function getOne(id) {
     // console.log(id);
     const getOne = await CanvaModel.findOne({ _id: id, isDeleted: false })
-    return returnData(getOne)
+    return getOne
 }
 
 async function getUser(id) {
-    const getOneCanva = await CanvaModel.findOne({ _id: id, isDeleted: false }).populate(populateImage).populate('imgSave')
-    const getOneArtist = await ArtistiModel.findOne({ _id: id, isDeleted: false }).populate(populateImage).populate('imgSave')
+    console.log(id);
+    const getOneCanva = await CanvaModel.findOne({ _id: id, isDeleted: false }).populate('imagesWork').populate('imgSave')
+    const getOneArtist = await ArtistiModel.findOne({ _id: id, isDeleted: false }).populate('imagesWork').populate('imgSave')
     if (getOneCanva !== null) {
-        return returnData(getOneCanva)
+        return getOneCanva
     } else {
-        return returnData(getOneArtist)
+        return getOneArtist
     }
 }
 
 
 async function updateOne(id, data) {
+    const foundUser = await CanvaModel.findById({ _id: id })
+    console.log(foundUser);
     const updateProduct = await CanvaModel.findByIdAndUpdate({ _id: id }, data, {
         new: true,
         constext: 'query',
     })
 
-    return returnData(updateProduct)
+    return updateProduct
 }
 
 async function remove(id) {
     console.log(id);
-    const deleteOne = await ArtistiModel.findByIdAndUpdate({ _id: id }, { isDeleted: true })
-    console.log(deleteOne);
-    // return returnData(deleteOne)
+    const deleteOne = await CanvaModel.findByIdAndUpdate({ _id: id }, { isDeleted: true })
+    return deleteOne
 }
 
 module.exports = {

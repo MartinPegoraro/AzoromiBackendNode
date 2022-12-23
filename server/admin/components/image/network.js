@@ -62,11 +62,42 @@ router.get("/getAllCanva", function (req, res) {
         })
 })
 router.get("/getAllArtist", function (req, res) {
-    console.log('123123123');
     controller
         .getAllArtiist()
         .then((data) => {
             response.success(req, res, data, 'todas las imagenes de artistas', 200)
+        })
+        .catch((err) => {
+            console.log('error');
+        })
+})
+router.delete("/deleteImg/:id", function (req, res) {
+    controller
+        .deleteImg(req.params.id)
+        .then((data) => {
+            response.success(req, res, data, 'Imagen eliminada', 200)
+        })
+        .catch((err) => {
+            console.log('error');
+        })
+})
+
+router.get("/getChatArtist/:id", function (req, res) {
+    controller
+        .getChatArtist(req.params.id)
+        .then((data) => {
+            response.success(req, res, data, 'Imagen eliminada', 200)
+        })
+        .catch((err) => {
+            console.log('error');
+        })
+})
+
+router.get("/getChatCanva/:id", function (req, res) {
+    controller
+        .getChatCanva(req.params.id)
+        .then((data) => {
+            response.success(req, res, data, 'Imagen eliminada', 200)
         })
         .catch((err) => {
             console.log('error');

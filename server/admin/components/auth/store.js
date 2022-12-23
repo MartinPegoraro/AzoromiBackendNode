@@ -167,11 +167,15 @@ async function passChange(data) {
     }
 
 }
+async function sendSearch({ search }) {
+
+}
 
 
 module.exports = {
     login,
     passChange,
     compareCod,
-    codRecoverPass
+    codRecoverPass,
+    sendSearch
 };
